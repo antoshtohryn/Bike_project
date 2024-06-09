@@ -1,0 +1,120 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.topbar {
+    background-color: #446991; /* Blue color for the topbar */
+    font-size: 30px;
+    color: #fff; /* White text color */
+    padding: 20px;
+    display: flex;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+.main button {
+    font-size: 30px;
+    width: 200px; /* Set width to 100% of parent container */
+    height: 50px; /* Set height to desired value */
+    margin-bottom: 10px; /* Add margin bottom to create a gap between buttons */
+    background-color: #2d2c2c; /* Background color for the buttons */
+    color: #fff; /* Text color */
+    border: none; /* Remove default border */
+    border-radius: 4px; /* Add some border-radius for rounded corners */
+    cursor: pointer; /* Change cursor to indicate clickable element */
+    transition: background-color 0.3s ease; /* Add transition effect for hover */
+}
+.main button:hover {
+    background-color: #555; /* Darken background color on hover */
+}
+
+.user-info {
+    padding-left: 65%;
+}
+
+.notification-icon {
+    padding-left: 3%;
+    padding-right: 3%;
+}
+
+.main-menu {
+    background-color: #2d2c2c; /* Black color for the main menu */
+    color: #fff; /* White text color */
+    width: 200px;
+    height: 100%;
+    position: fixed;
+    padding-top: 50px;
+    padding-inline: 10px;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif; /* Modern font */
+}
+
+#line{
+    border-bottom: 3px solid #4c4a4a;
+}
+
+.menu-item button {
+    font-size: 20px;
+    width: 100%; /* Set width to 100% of parent container */
+    height: 50px; /* Set height to desired value */
+    margin-bottom: 10px; /* Add margin bottom to create a gap between buttons */
+    background-color: #2d2c2c; /* Background color for the buttons */
+    color: #fff; /* Text color */
+    border: none; /* Remove default border */
+    border-radius: 4px; /* Add some border-radius for rounded corners */
+    cursor: pointer; /* Change cursor to indicate clickable element */
+    transition: background-color 0.3s ease; /* Add transition effect for hover */
+}
+.menu-item button:hover {
+    background-color: #555; /* Darken background color on hover */
+}
+
+.search-input {
+    padding: 8px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+    font-size: 16px;
+    outline: none;
+    margin: 0; /* Remove default margin */
+}
+
+.search-button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    background-color: #1648dd;
+    color:#fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin: 0; /* Remove default margin */
+}
+.search-button:hover {
+    background-color: #e0e0e0;
+}
+
+.content {
+    margin-top: 50px;
+    margin-left: 220px;
+    padding: 50px;
+}
+
+
+/* Style the submit button */
+.content input[type="submit"] {
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    padding: 10px 20px; /* Some padding */
+    margin: 10px 0; /* Some margin */
+    border: none; /* Remove borders */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer/hand icon on hover */
+    font-size: 16px; /* Increase font size */
+    font-weight: bold; /* Bold text */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
