@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <title>BikeRegist</title>
 </head>
 <body>
 
 <div class="topbar">
-    <div class="page-title"><a href="main.html">BikeRegist</a></div>
+<div class="main"><a href="main.html"><button>BikeRegist</button></a></div>
     <div class="user-info">
         <span>Welcome, user</span>
     </div>

@@ -3,41 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <title>BikeRegist</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        /* Button Styling */
+        button.green {
+            background-color: #28a745; /* Green */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
         }
-        table, th, td {
-            border: 1px solid black;
+
+        button.green:hover {
+            background-color: #218838; /* Darker green on hover */
         }
-        th, td {
-            padding: 15px;
-            text-align: left;
+
+        button.red {
+            background-color: #dc3545; /* Red */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
         }
-        th {
-            background-color: #f2f2f2;
+
+        button.red:hover {
+            background-color: #c82333; /* Darker red on hover */
         }
-        input[type="submit"] {
-        background-color: #4CAF50; /* Green background */
-        color: white; /* White text */
-        padding: 10px 20px; /* Some padding */
-        margin: 10px 0; /* Some margin */
-        border: none; /* Remove borders */
-        border-radius: 5px; /* Rounded corners */
-        cursor: pointer; /* Pointer/hand icon on hover */
-        font-size: 16px; /* Increase font size */
-        font-weight: bold; /* Bold text */
-        transition: background-color 0.3s ease; /* Smooth transition */
-        }    
     </style>
 </head>
 <body>
 
 <div class="topbar">
-    <div class="page-title"><a href="main.html">BikeRegist</a></div>
+    <div class="main"><a href="main.html"><button>BikeRegist</button></a></div>
     <div class="user-info">
         <span>Welcome, user</span>
     </div>
@@ -57,92 +58,101 @@
 </div>
 
 <div class="content">
-    <form method="POST" action="appointment_registaration_form.php"> 
-        <input type="submit" name="submit" value="Create new"> 
-    </form>
+    <?php
+        $servername = "localhost"; 
+        $username = "anton"; 
+        $password = "anton"; 
+        $database = "bikeshop"; 
 
+        $conn = new mysqli($servername, $username, $password, $database);
+
+        if (isset($_GET['id_appointment'])) {
+            $id_appointment = $_GET['id_appointment'];
+            $query = "SELECT appointment.*, bike.*, customer.*
+                      FROM appointment
+                      INNER JOIN bike ON appointment.id_bike = bike.id_bike
+                      INNER JOIN customer ON appointment.id_customer = customer.id_customer
+                      WHERE appointment.id_appointment = $id_appointment";
+            $result = $conn->query($query);
+
+            if ($result->num_rows > 0) {
+                $appointment = $result->fetch_assoc();
+    ?>
+    <script>
+    function toggleStatus(idAppointment) {
+        const currentStatus = document.getElementById("status").innerText;
+        const newStatus = currentStatus === "open" ? "closed" : "open";
+
+        $.ajax({
+            url: "update_status.php",
+            method: "POST",
+            data: { id_appointment: idAppointment, new_status: newStatus },
+            success: function(response) {
+                const data = JSON.parse(response);
+                if (data.success) {
+                    // Update status on page
+                    document.getElementById("status").innerText = data.new_status;
+
+                    // Update button text and style
+                    const button = document.getElementById("statusButton");
+                    button.innerText = data.new_status === "open" ? "Close Appointment" : "Open Appointment";
+                    button.className = data.new_status === "open" ? "green" : "red";
+                } else {
+                    alert("Error: " + data.message);
+                }
+            },
+            error: function() {
+                alert("An error occurred while updating the status.");
+            }
+        });
+    }
+    </script>
+
+    <button id="statusButton" 
+            class="<?php echo $appointment['status'] === 'open' ? 'green' : 'red'; ?>" 
+            onclick="toggleStatus(<?php echo $appointment['id_appointment']; ?>)">
+        <?php echo $appointment['status'] === 'open' ? 'Close Appointment' : 'Reopen Appointment'; ?>
+    </button>
 
     <h1>Appointment Details</h1>
 
+    <div class="bike-details">
+        <h2>Bike Details</h2>
+        <p>Model: <?php echo $appointment['model']; ?></p>
+        <p>Color: <?php echo $appointment['color']; ?></p>
+    </div>
 
-<?php
-$servername = "localhost"; 
-$username = "anton"; 
-$password = "anton"; 
-$database = "bikeshop"; 
+    <div class="customer-details">
+        <h2>Customer Details</h2>
+        <p>Name: <?php echo $appointment['name']; ?></p>
+        <p>Email: <?php echo $appointment['email']; ?></p>
+    </div>
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $database);
+    <div class="notes">
+        <h2>Notes</h2>
+        <p><?php echo $appointment['comment']; ?></p>
+    </div>
 
+    <div class="service-type">
+        <h2>Service Type</h2>
+        <p><?php echo $appointment['service_type']; ?></p>
+    </div>
 
-if(isset($_GET['id_appointment'])) {
-    // Extract the id_appointment value from the URL
-    $id_appointment = $_GET['id_appointment'];
+    <div class="status">
+        <h2>Status</h2>
+        <p id="status"><?php echo $appointment['status']; ?></p>
+    </div>
 
-    // Fetch appointment details with related data
-    $query = "SELECT appointment.*, bike.*, customer.*
-              FROM appointment
-              INNER JOIN bike ON appointment.id_bike = bike.id_bike
-              INNER JOIN customer ON appointment.id_customer = customer.id_customer
-              WHERE appointment.id_appointment = $id_appointment";
-   
-    $result = $conn->query($query);
+    <?php
+            } else {
+                echo "Appointment not found.";
+            }
+        } else {
+            echo "No appointment ID specified.";
+        }
 
-    // Check if appointment details are found
-    if ($result->num_rows > 0) {
-        // Output data of the appointment
-        $appointment = $result->fetch_assoc();
-?>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Appointment Details</title>
-    <style>
-        /* Add your CSS styles here */
-    </style>
-</head>
-<body>
-
-<div class="bike-details">
-    <h2>Bike Details</h2>
-    <p>Model: <?php echo $appointment['model']; ?></p>
-    <p>Color: <?php echo $appointment['color']; ?></p>
-    <!-- Add more bike details here -->
-</div>
-
-<div class="customer-details">
-    <h2>Customer Details</h2>
-    <p>Name: <?php echo $appointment['name']; ?></p>
-    <p>Email: <?php echo $appointment['email']; ?></p>
-    <!-- Add more customer details here -->
-</div>
-
-<div class="notes">
-    <h2>Notes</h2>
-    <p><?php echo $appointment['comment']; ?></p>
-    <!-- Add more notes here -->
-</div>
-
-<div class="service-type">
-    <h2>Service Type</h2>
-    <p><?php echo $appointment['service_type']; ?></p>
-    <!-- Add more service type details here -->
-</div>
-
-</body>
-</html>
-
-<?php
-    } else {
-        echo "Appointment not found.";
-    }
-} else {
-    // If id_appointment parameter is not set in the URL
-    echo "No parameter specified in the URL.";
-}
-
-$conn->close();
-?>
+        $conn->close();
+    ?>
 </div>
 
 </body>

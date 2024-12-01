@@ -3,47 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <title>BikeRegist</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 15px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        tr {
-            cursor: pointer;
-        }
-        tr:hover {
-        background-color: #D1F4F5;
-        }
-        input[type="submit"] {
-        background-color: #4CAF50; /* Green background */
-        color: white; /* White text */
-        padding: 10px 20px; /* Some padding */
-        margin: 10px 0; /* Some margin */
-        border: none; /* Remove borders */
-        border-radius: 5px; /* Rounded corners */
-        cursor: pointer; /* Pointer/hand icon on hover */
-        font-size: 16px; /* Increase font size */
-        font-weight: bold; /* Bold text */
-        transition: background-color 0.3s ease; /* Smooth transition */
-        }    
-    </style>
 </head>
 <body>
 
 <div class="topbar">
-    <div class="page-title"><a href="main.html">BikeRegist</a></div>
+    <div class="main"><a href="main.html"><button>BikeRegist</button></a></div>
     <div class="user-info">
         <span>Welcome, user</span>
     </div>
