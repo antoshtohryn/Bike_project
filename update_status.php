@@ -1,12 +1,7 @@
 <?php
-$servername = "localhost";
-$username = "anton";
-$password = "anton";
-$database = "bikeshop";
-
-// Database connection
-$conn = new mysqli($servername, $username, $password, $database);
-
+include 'login/auth.php'; // Include authentication check
+?>
+<?php
 if ($conn->connect_error) {
     die(json_encode(["success" => false, "message" => "Database connection failed."]));
 }

@@ -1,7 +1,6 @@
 <?php
 include 'login/auth.php'; // Include authentication check
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,10 +34,14 @@ include 'login/auth.php'; // Include authentication check
     </form>
 
 
-    <h1>All appointments</h1>
+    <h1>Schedule</h1>
 
 
 <?php
+if(isset($_GET['id_appointment'])) {
+    // Extract the id_appointment value from the URL
+    $id_appointment = $_GET['id_appointment'];
+}
 // Fetch appointments
 $query = "
     SELECT 
@@ -52,6 +55,7 @@ $query = "
     FROM appointment 
     JOIN customer ON appointment.id_customer = customer.id_customer
     JOIN bike ON appointment.id_bike = bike.id_bike
+    Where appointment.status = 'open'
 ";
 $result = $conn->query($query);
 if($result)

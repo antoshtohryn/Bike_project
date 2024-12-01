@@ -2,7 +2,32 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #f5f5f5;
 }
+
+.card {
+    background: #fff;
+    border-radius: 8px;
+    
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+    padding: 30px;
+    padding-top: 10px;
+    margin-bottom: 20px;
+   
+}
+
+.card h2 {
+    font-size: 16px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.card p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+
 
 .topbar {
     background-color: #446991; /* Blue color for the topbar */
@@ -32,8 +57,8 @@ body {
     background-color: #555; /* Darken background color on hover */
 }
 
-.user-info {
-    padding-left: 65%;
+.logout {
+    padding-left: 77%;
 }
 
 .notification-icon {
@@ -71,6 +96,23 @@ body {
 }
 .menu-item button:hover {
     background-color: #555; /* Darken background color on hover */
+}
+
+.logout button {
+    font-size: 20px;
+    width: 100%; /* Set width to 100% of parent container */
+    height: 30px; /* Set height to desired value */
+    background-color: #956600; /* Background color for the buttons */
+    margin: 10px;
+    margin-left: 20px;
+    color: #fff; /* Text color */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Add some border-radius for rounded corners */
+    cursor: pointer; /* Change cursor to indicate clickable element */
+    transition: background-color 0.3s ease; /* Add transition effect for hover */
+}
+.logout button:hover {
+    background-color: #654500; /* Darken background color on hover */
 }
 
 .search-input {

@@ -1,25 +1,24 @@
-
+<?php
+include 'login/auth.php'; // Include authentication check
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <title>BikeRegist</title>
 </head>
 <body>
 
 <div class="topbar">
-    <div class="page-title"><a href="main.html"><button>BikeRegist</button></a></div>
-    <div class="user-info">
-        <span>Welcome, user</span>
-    </div>
-    <div class="notification-icon">🔔</div>
+    <div class="main"><a href="main.php"><button>BikeRegist</button></a></div>
+    <div class="logout"><a href="login/logout.php"><button>Logout</button></a></div>
 </div>
 
 <div class="main-menu">
-    <div class="menu-item"><a href="calendar.html"><button>Calendar</button></a></div>
-    <div class="menu-item" id="line"><button>Schedule</button></div>
+    <div class="menu-item"><<button>Calendar</button></div>
+    <div class="menu-item" id="line"><a href="appointment_schedule.php"><button>Schedule</button></a></div>
     <div class="menu-item"><a href="appointment_list.php"><button>Appointments</button></a></div>
     <div class="menu-item"><button>Notes</button></div>
     <div class="menu-item"><button>Customers</button></div>
@@ -31,19 +30,6 @@
 
 <div class="content">
 <?php
-$servername = "localhost"; 
-$username = "anton"; 
-$password = "anton"; 
-$database = "bikeshop"; 
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $database);
-
-// Check connection
-if ($conn->connect_error) {
-    echo"Connection failed";
-}
-
 if(isset($_POST['submit']))
 {
 $name = $_POST['name'];
