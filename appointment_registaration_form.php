@@ -8,6 +8,48 @@ include 'login/auth.php'; // Include authentication check
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="style.css">
     <title>BikeRegist</title>
+    <style>
+        /* General form styling */
+        .content {
+            width: 60%;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-top: 50px;
+            margin-left: 300px;
+            padding: 50px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Adjustments for form spacing */
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .customer-input {
+            padding: 20px;
+        }
+
+        select {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .content {
+                width: 90%;
+                padding: 15px;
+            }
+            
+            input[type="submit"] {
+                width: 100%;
+            }
+        }
+
+    </style>
 </head>
 <body>
 
@@ -17,7 +59,7 @@ include 'login/auth.php'; // Include authentication check
 </div>
 
 <div class="main-menu">
-    <div class="menu-item"><<button>Calendar</button></div>
+    <div class="menu-item"><button>Calendar</button></div>
     <div class="menu-item" id="line"><a href="appointment_schedule.php"><button>Schedule</button></a></div>
     <div class="menu-item"><a href="appointment_list.php"><button>Appointments</button></a></div>
     <div class="menu-item"><button>Notes</button></div>
@@ -25,36 +67,34 @@ include 'login/auth.php'; // Include authentication check
     <div class="menu-item" id="line"><button>Messages</button></div>
     <div class="menu-item"><button>Settings</button></div>
     <div class="menu-item"><button>Help</button></div>
-    <div class="menu-item"><button>Logout</button></div>
 </div>
 
 <div class="content">
-    <h2>Create appointment</h2>
         <div class="customer-input">
         <form method="POST" action="appointment_registration_process.php" >
             <h2>Customer</h2>
-            <label for="name">Name:</label><br>
-            <input type="text" id="name" name="name" required><br>
-            <label for="name">Surname:</label><br>
-            <input type="text" id="surname" name="surname" required><br>
-            <label for="email">Email:</label><br>
-            <input type="email" id="email" name="email"><br>
-            <label for="email">Phone:</label><br>
-            <input type="phone" id="phone" name="phone" required><br>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="name">Surname:</label>
+            <input type="text" id="surname" name="surname" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email">
+            <label for="email">Phone:</label>
+            <input type="phone" id="phone" name="phone" required>
             
             <h2>Date</h2>
-            <label for="name">Date:</label><br>
-            <input type="date" id="date" name="date"><br>
+            <label for="name">Date:</label>
+            <input type="date" id="date" name="date">
 
             <h2>Bike</h2>
-            <label for="name">Brand:</label><br>
-            <input type="text" id="brand" name="brand" required><br>
-            <label for="name">Model:</label><br>
-            <input type="text" id="model" name="model" required><br>
-            <label for="name">Year:</label><br>
-            <input type="number" id="year" name="year" required><br>
-            <label for="name">Color:</label><br>
-            <input type="text" id="color" name="color" required><br>
+            <label for="name">Brand:</label>
+            <input type="text" id="brand" name="brand" required>
+            <label for="name">Model:</label>
+            <input type="text" id="model" name="model" required>
+            <label for="name">Year:</label>
+            <input type="number" id="year" name="year" required>
+            <label for="name">Color:</label>
+            <input type="text" id="color" name="color" required>
 
             <h2>Service</h2>
             <select id="service" name="service">
@@ -76,13 +116,13 @@ include 'login/auth.php'; // Include authentication check
                 }
                 $conn->close();
                 ?>
-            </select><br>
+            </select>
 
             <h2>Other information</h2>
-            <label for="name">Comments:</label><br>
-            <input type="text" id="comment" name="comment"><br>
-            <label for="name">Estimated price:</label><br>
-            <input type="number" id="price" name="price"><br>
+            <label for="comment">Comments:</label>
+            <textarea id="comment" name="comment" rows="4" style="resize: both;"></textarea>
+            <label for="name">Estimated price:</label>
+            <input type="number" id="price" name="price">
             
             <br>
             <input type="submit" name="submit" value="Register">

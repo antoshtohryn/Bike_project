@@ -25,7 +25,6 @@ include 'login/auth.php'; // Include authentication check
     <div class="menu-item" id="line"><button>Messages</button></div>
     <div class="menu-item"><button>Settings</button></div>
     <div class="menu-item"><button>Help</button></div>
-    <div class="menu-item"><button>Logout</button></div>
 </div>
 
 <div class="content">
