@@ -8,6 +8,17 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
+// Get the current date
+$currentDate = date('Y-m-d');
+
+// Compare session login date with current date
+if (isset($_SESSION['login_date']) && $_SESSION['login_date'] !== $currentDate) {
+    // If the dates don't match, destroy the session and redirect to the login page
+    session_destroy();
+    header("Location: login/login.php"); // Redirect to login page
+    exit();
+}
+
 // Connection credentials
 $servername = "localhost";
 $db_username = "anton";

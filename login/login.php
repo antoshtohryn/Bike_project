@@ -20,19 +20,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Connection failed: " . $conn->connect_error);
     }
 
-    // Fetch user from the `users` table
-    $query = "SELECT * FROM users WHERE username = ? AND password = ?";
+    // Fetch user from the `users` table by username
+    $query = "SELECT * FROM users WHERE username = ?";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("ss", $login_user, $login_pass);
+    $stmt->bind_param("s", $login_user);
     $stmt->execute();
     $result = $stmt->get_result();
 
     // If user exists
     if ($result->num_rows > 0) {
-        $_SESSION['username'] = $login_user; // Save username in session
-        header("Location: ../main.php");   // Redirect to the main page
-        exit();
+        $user = $result->fetch_assoc();  // Fetch the user data
+        
+        // Check if the entered password matches the hashed password
+        if (password_verify($login_pass, $user['password'])) {
+            // Password is correct, start the session
+            $_SESSION['username'] = $login_user; // Save username in session
+            header("Location: ../calendar.php");   // Redirect to the main page
+            exit();
+        } else {
+            // Password is incorrect
+            $error = "Invalid username or password!";
+        }
     } else {
+        // No user found
         $error = "Invalid username or password!";
     }
 
@@ -126,7 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div class="login">
-    <h1>Login</h1>
+        <h1>Login</h1>
         <form method="POST" action="">
             <label for="username">Username:</label>
             <input type="text" name="username" id="username" required><br><br>
@@ -137,6 +147,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <?php if (isset($error)) echo "<p style='color: red;'>$error</p>"; ?>
     </div>
-    
 </body>
 </html>
