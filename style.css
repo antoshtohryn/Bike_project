@@ -632,3 +632,56 @@ h1 {
         padding: 5px;
     }
 }
+
+/* Container to hold all image-button divs */
+.container {
+    display: flex;
+    gap: 15px;  /* Small space between each image-button */
+    align-items: center;  /* Vertically align the items */
+    padding: 10px;  /* Padding around the container */
+}
+
+/* Style for the image container (button) */
+.image-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    text-align: center; /* Center the text label */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Light shadow border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 10px;
+    width: 150px;  /* Fixed width for uniform size */
+    height: 150px;  /* Fixed height for uniform size */
+    overflow: hidden;  /* Ensures that the image fits inside the div */
+}
+
+.image-button:hover {
+    transform: scale(1.05); /* Slight scale on hover */
+}
+
+/* Ensures images maintain their aspect ratio and fit within the div */
+img {
+    width: 50%;
+    height: 50%;
+    object-fit: cover; /* Ensures the image covers the whole div without stretching */
+    border-radius: 8px;
+}
+
+/* Style for the label */
+.image-button .label {
+    display: block;
+    font-size: 16px;
+    color: #007bff;
+    margin-top: 10px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.image-button .label:hover {
+    color: #0056b3; /* Change color on hover */
+    text-decoration: underline; /* Add underline on hover */
+}

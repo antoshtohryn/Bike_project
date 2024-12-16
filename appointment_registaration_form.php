@@ -62,7 +62,7 @@ include 'login/auth.php'; // Include authentication check
     <div class="menu-item" id="line"><a href="appointment_schedule.php"><button>Schedule</button></a></div>
     <div class="menu-item"><a href="appointment_list.php"><button>Appointments</button></a></div>
     <div class="menu-item" id="line"><a href="customers_list.php"><button>Customers</button></a></div>
-    <div class="menu-item"><button>Settings</button></div>
+    <div class="menu-item"><a href="settings.php"><button>Settings</button></a></div>
 </div>
 
 <div class="content">
@@ -177,6 +177,21 @@ include 'login/auth.php'; // Include authentication check
             <input type="text" id="model" name="model" required>
             <label for="name">Year: <span style="color: red;">*</span></label>
             <input type="number" id="year" name="year" required>
+            <script>
+                const yearInput = document.getElementById('year');
+
+                yearInput.addEventListener('input', function() {
+                    let value = yearInput.value;
+
+                    // Restrict the input to a maximum of 3 digits and prevent dots
+                    const regex = /^\d{0,4}$/;
+
+                    // If the input doesn't match the regex, slice the value to ensure it fits
+                    if (!regex.test(value)) {
+                        yearInput.value = value.slice(0, 4); // Maximum of 3 digits
+                    }
+                });
+            </script>
             <label for="name">Color: <span style="color: red;">*</span></label>
             <input type="text" id="color" name="color" required>
 
@@ -201,7 +216,22 @@ include 'login/auth.php'; // Include authentication check
     <ul id="selectedServices"></ul>
 
     <label for="price">Estimated price:<span style="color: red;">*</span></label>
-    <input type="number" id="price" name="price" step="0.01" required>
+    <input type="number" id="price" name="price" required>
+    <script>
+        const priceInput = document.getElementById('price');
+
+        priceInput.addEventListener('input', function() {
+            let value = priceInput.value;
+
+            // Restrict the input to a maximum of 4 digits and prevent dots
+            const regex = /^\d{0,4}$/;
+
+            // If the input doesn't match the regex, slice the value to ensure it fits
+            if (!regex.test(value)) {
+                priceInput.value = value.slice(0, 4); // Maximum of 4 digits
+            }
+        });
+    </script>
 
     <!-- Hidden inputs for selected services -->
     <input type="hidden" id="selectedServicesInput" name="selected_services">
@@ -216,7 +246,7 @@ include 'login/auth.php'; // Include authentication check
         // Prevent adding a duplicate service
         if (selectedServices.some(service => service.type === serviceType)) {
             alert("This service is already selected.");
-            return;
+      return;
         }
 
         // Fetch price for the selected service

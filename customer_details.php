@@ -22,7 +22,7 @@ include 'login/auth.php'; // Include authentication check
     <div class="menu-item" id="line"><a href="appointment_schedule.php"><button>Schedule</button></a></div>
     <div class="menu-item"><a href="appointment_list.php"><button>Appointments</button></a></div>
     <div class="menu-item" id="line"><a href="customers_list.php"><button>Customers</button></a></div>
-    <div class="menu-item"><button>Settings</button></div>
+    <div class="menu-item"><a href="settings.php"><button>Settings</button></a></div>
 </div>
 
 <div class="content">
@@ -31,9 +31,9 @@ include 'login/auth.php'; // Include authentication check
         $id_customer = $_GET['id_customer'];
 
         // Query to get customer and their bikes
-        $query = "SELECT customer.*, bike.*
-                  FROM customer
-                  INNER JOIN bike ON customer.id_customer = bike.id_customer
+        $query = "SELECT customer.*, bike.* 
+                  FROM customer 
+                  INNER JOIN bike ON customer.id_customer = bike.id_customer 
                   WHERE customer.id_customer = $id_customer";
         $result = $conn->query($query);
 
@@ -44,8 +44,8 @@ include 'login/auth.php'; // Include authentication check
             // Display customer information
             ?>
             <h1>Customer Information</h1>
+            <h2>Customer</h2><br>
             <div class="card">
-                <h2>Customer</h2><br>
                 <p><?php echo $customer['name'] . " " . $customer['surname']; ?></p><br>
                 Contact Information:<br><br>
                 <p><?php echo $customer['phone']; ?></p>
@@ -55,7 +55,7 @@ include 'login/auth.php'; // Include authentication check
             <h2>Bikes</h2>
             <?php
             // Reset the result pointer to loop through all bikes
-            $result->data_seek(0); // Rewind result set to the first row
+            $result->data_seek(0);
 
             // Loop through each bike and display details
             while ($bike = $result->fetch_assoc()) {
@@ -65,6 +65,47 @@ include 'login/auth.php'; // Include authentication check
                     <p><?php echo $bike['year'] . ", " . $bike['color']; ?></p>
                 </div>
                 <?php
+            }
+
+            // Query to get all appointments for this customer
+            $appointmentsQuery = "
+                SELECT 
+                    appointment.id_appointment, 
+                    bike.brand AS bike_brand, 
+                    bike.model AS bike_model, 
+                    appointment.status, 
+                    appointment.date_recieved
+                FROM appointment
+                INNER JOIN bike ON appointment.id_bike = bike.id_bike
+                WHERE appointment.id_customer = $id_customer
+                ORDER BY appointment.date_recieved DESC
+            ";
+            $appointmentsResult = $conn->query($appointmentsQuery);
+
+            ?>
+            <h2>Appointments</h2>
+            <?php
+            if ($appointmentsResult && $appointmentsResult->num_rows > 0) {
+                // Display appointments in a table format
+                echo "<table border='1' cellspacing='0' cellpadding='5'>
+                        <tr>
+                            <th>ID</th>
+                            <th>Bike</th>
+                            <th>Status</th>
+                            <th>Date Received</th>
+                        </tr>";
+                while ($appointment = $appointmentsResult->fetch_assoc()) {
+                    $statusClass = ($appointment['status'] === "open") ? "text-open" : "text-closed";
+                    echo "<tr onclick=\"window.location='appointment_details.php?id_appointment=" . $appointment['id_appointment'] . "'\">";
+                    echo "<td>" . $appointment['id_appointment'] . "</td>";
+                    echo "<td>" . $appointment['bike_brand'] . " " . $appointment['bike_model'] . "</td>";
+                    echo "<td><span class='$statusClass'>" . ucfirst($appointment['status']) . "</span></td>";
+                    echo "<td>" . $appointment['date_recieved'] . "</td>";
+                    echo "</tr>";
+                }
+                echo "</table>";
+            } else {
+                echo "<p>No appointments found for this customer.</p>";
             }
         } else {
             echo "Customer or bikes not found.";

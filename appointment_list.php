@@ -22,7 +22,7 @@ include 'login/auth.php'; // Include authentication check
     <div class="menu-item" id="line"><a href="appointment_schedule.php"><button>Schedule</button></a></div>
     <div class="menu-item"><a href="appointment_list.php"><button>Appointments</button></a></div>
     <div class="menu-item" id="line"><a href="customers_list.php"><button>Customers</button></a></div>
-    <div class="menu-item"><button>Settings</button></div>
+    <div class="menu-item"><a href="settings.php"><button>Settings</button></a></div>
 </div>
 
 <div class="content">

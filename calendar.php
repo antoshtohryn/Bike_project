@@ -4,19 +4,39 @@ include 'login/auth.php'; // Include authentication check
 // Get the current date
 $currentDate = date('Y-m-d');
 
-// Update appointments that are before the current date and have status 'open'
-$updateAppointmentsQuery = "
-    UPDATE appointment
-    SET date_recieved = '$currentDate'
+// Check if there are any 'open' appointments with date_received less than the current date
+$checkAppointmentsQuery = "
+    SELECT COUNT(*) FROM appointment 
     WHERE status = 'open' AND date_recieved < '$currentDate'
 ";
 
-// Execute the update query
-if ($conn->query($updateAppointmentsQuery) === TRUE) {
-    // Optionally, display a success message or log it
-    // echo "Appointments have been successfully updated.";
+// Execute the query to check if there are any matching records
+$result = $conn->query($checkAppointmentsQuery);
+
+if ($result && $result->num_rows > 0) {
+    // Fetch the result and get the count
+    $row = $result->fetch_assoc();
+    $appointmentsCount = $row['COUNT(*)'];
+
+    // If there are matching appointments, perform the update
+    if ($appointmentsCount > 0) {
+        // Update appointments
+        $updateAppointmentsQuery = "
+            UPDATE appointment
+            SET date_received = '$currentDate'
+            WHERE status = 'open' AND date_received < '$currentDate'
+        ";
+
+        // Execute the update query
+        if ($conn->query($updateAppointmentsQuery) === TRUE) {
+            // Optionally, display a success message or log it
+            echo "Appointments have been successfully updated.";
+        } else {
+            echo "Error updating appointments: " . $conn->error;
+        }
+    }
 } else {
-    echo "Error updating appointments: " . $conn->error;
+    echo "No matching appointments found or table is empty.";
 }
 
 // Get the current month and year, or set to provided month/year from GET parameters
@@ -70,7 +90,7 @@ $conn->close();
     <div class="menu-item" id="line"><a href="appointment_schedule.php"><button>Schedule</button></a></div>
     <div class="menu-item"><a href="appointment_list.php"><button>Appointments</button></a></div>
     <div class="menu-item" id="line"><a href="customers_list.php"><button>Customers</button></a></div>
-    <div class="menu-item"><button>Settings</button></div>
+    <div class="menu-item"><a href="settings.php"><button>Settings</button></a></div>
 </div>
 
 <div class="content">

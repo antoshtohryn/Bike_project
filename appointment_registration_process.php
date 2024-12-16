@@ -21,7 +21,7 @@ include 'login/auth.php'; // Include authentication check
     <div class="menu-item" id="line"><a href="appointment_schedule.php"><button>Schedule</button></a></div>
     <div class="menu-item"><a href="appointment_list.php"><button>Appointments</button></a></div>
     <div class="menu-item" id="line"><a href="customers_list.php"><button>Customers</button></a></div>
-    <div class="menu-item"><button>Settings</button></div>
+    <div class="menu-item"><a href="settings.php"><button>Settings</button></a></div>
 </div>
 
 <div class="content">
@@ -52,14 +52,14 @@ if(isset($_POST['submit']))
         $id_customer = (int)$row['id_customer']; // Convert to integer
     } else {
         // Insert new customer
-        $insertQuery = "INSERT INTO customer VALUES ('$name', '$surname', '$email', '$phone')";
+        $insertQuery = "INSERT INTO customer VALUES (null, '$name', '$surname', '$email', '$phone')";
         // Get the last inserted customer ID
-        $query_id_customer = "SELECT id_customer FROM customer ORDER BY id_customer DESC LIMIT 1";
-        $query = mysqli_query($conn, $query_id_customer);
-        $row = $query->fetch_assoc();
-        $id_customer = $row['id_customer'];
         if ($conn->query($insertQuery) === TRUE) {
             echo "New customer added successfully.";
+            $query_id_customer = "SELECT id_customer FROM customer ORDER BY id_customer DESC LIMIT 1";
+            $query = mysqli_query($conn, $query_id_customer);
+            $row = $query->fetch_assoc();
+            $id_customer = $row['id_customer'];
         } else {
             echo "Error: " . $conn->error;
         }
