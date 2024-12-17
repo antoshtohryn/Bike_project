@@ -123,7 +123,7 @@ $result = $conn->query($selectQuery);
                         <td><?php echo htmlspecialchars($row['price']); ?></td>
                         <td><?php echo htmlspecialchars($row['time_mins']); ?></td>
                         <td>
-                            <form method="POST" style="display:inline;">
+                            <form method="POST" style="display:inline;" onsubmit="return confirmDelete();">
                                 <input type="hidden" name="delete_id" value="<?php echo $row['id_service']; ?>">
                                 <button type="submit" class="delete-btn">Delete</button>
                             </form>
@@ -138,6 +138,12 @@ $result = $conn->query($selectQuery);
         </tbody>
     </table>
 </div>
+ 
+<script>
+    function confirmDelete() {
+        return confirm("Are you sure you want to delete this service?");
+    }
+</script>
 
 </body>
 </html>

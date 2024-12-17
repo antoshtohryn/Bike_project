@@ -23,8 +23,8 @@ if ($result && $result->num_rows > 0) {
         // Update appointments
         $updateAppointmentsQuery = "
             UPDATE appointment
-            SET date_received = '$currentDate'
-            WHERE status = 'open' AND date_received < '$currentDate'
+            SET date_recieved = '$currentDate'
+            WHERE status = 'open' AND date_recieved < '$currentDate'
         ";
 
         // Execute the update query

@@ -33,10 +33,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         // Check if the entered password matches the hashed password
         if ($user && password_verify($login_pass, $user['password'])) {
-            // Password is correct, start the session
-            $_SESSION['username'] = $login_user;
-            header("Location: ../calendar.php");
-            exit();
+            // Check if the user is the admin
+            if ($login_user === 'bikeshop') {
+                // Redirect admin to calendar
+                $_SESSION['username'] = $login_user;
+                header("Location: ../calendar.php");
+                exit();
+            } else {
+                // Redirect clients to client page
+                $_SESSION['username'] = $login_user;
+                header("Location: ../client/client.php");
+                exit();
+            }
         } else {
             $error = "Invalid username or password!";
         }
@@ -48,6 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

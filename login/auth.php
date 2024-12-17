@@ -23,7 +23,7 @@ if (isset($_SESSION['login_date']) && $_SESSION['login_date'] !== $currentDate) 
 $servername = "localhost";
 $db_username = "anton";
 $db_password = "anton";
-$user_database = $_SESSION['username']; // Database name is the username
+$user_database = "bikeshop"; // Database name is the username
 
 // Connect to the user's database
 $conn = new mysqli($servername, $db_username, $db_password, $user_database);
