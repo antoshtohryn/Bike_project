@@ -92,7 +92,7 @@ include '../login/auth.php'; // Include authentication check
                             <th>ID</th>
                             <th>Bike</th>
                             <th>Status</th>
-                            <th>Date Received</th>
+                            <th>Date Scheduled</th>
                         </tr>";
                 while ($appointment = $appointmentsResult->fetch_assoc()) {
                     $statusClass = ($appointment['status'] === "open") ? "text-open" : "text-closed";

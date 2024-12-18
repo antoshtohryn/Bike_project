@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($login_user === 'bikeshop') {
                 // Redirect admin to calendar
                 $_SESSION['username'] = $login_user;
-                header("Location: ../calendar.php");
+                header("Location: ../bikeshop/calendar.php");
                 exit();
             } else {
                 // Redirect clients to client page

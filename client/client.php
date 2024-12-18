@@ -14,7 +14,7 @@ include '../login/auth.php'; // Include authentication check
 
 <div class="topbar">
     <div class="main"><a href="client.php"><button>BikeRegist</button></a></div>
-    <div class="logout"><a href="login/logout.php"><button>Logout</button></a></div>
+    <div class="logout"><a href="../login/logout.php"><button>Logout</button></a></div>
 </div>
 
 <div class="main-menu">
@@ -51,7 +51,8 @@ include '../login/auth.php'; // Include authentication check
                   WHERE customer.id_customer = $id_customer";
         $result = $conn->query($query);
 
-        if ($result->num_rows > 0) {
+            $query = "SELECT * FROM customer WHERE customer.id_customer = $id_customer";
+            $result = $conn->query($query);
             // Fetch customer information from the first row
             $customer = $result->fetch_assoc();
 
@@ -68,19 +69,24 @@ include '../login/auth.php'; // Include authentication check
 
             <h2>Bikes</h2>
             <?php
-            // Reset the result pointer to loop through all bikes
-            $result->data_seek(0);
-
-            // Loop through each bike and display details
-            while ($bike = $result->fetch_assoc()) {
-                ?>
-                <div class="card">
-                    <p><?php echo $bike['brand'] . " " . $bike['model']; ?></p>
-                    <p><?php echo $bike['year'] . ", " . $bike['color']; ?></p>
-                </div>
-                <?php
+             $query = "SELECT * FROM bike WHERE bike.id_customer = $id_customer";
+             $result = $conn->query($query);
+            if ($result && $result->num_rows > 0){
+               // Reset the result pointer to loop through all bikes
+               $result->data_seek(0);
+   
+               // Loop through each bike and display details
+               while ($bike = $result->fetch_assoc()) {
+                   ?>
+                   <div class="card">
+                       <p><?php echo $bike['brand'] . " " . $bike['model']; ?></p>
+                       <p><?php echo $bike['year'] . ", " . $bike['color']; ?></p>
+                   </div>
+                   <?php
+               }
+            }else {
+                echo "<p>No bikes found for this customer.</p>";
             }
-
             // Query to get all appointments for this customer
             $appointmentsQuery = "
                 SELECT 
@@ -106,7 +112,7 @@ include '../login/auth.php'; // Include authentication check
                             <th>ID</th>
                             <th>Bike</th>
                             <th>Status</th>
-                            <th>Date Received</th>
+                            <th>Date Scheduled</th>
                         </tr>";
                 while ($appointment = $appointmentsResult->fetch_assoc()) {
                     $statusClass = ($appointment['status'] === "open") ? "text-open" : "text-closed";
@@ -121,9 +127,6 @@ include '../login/auth.php'; // Include authentication check
             } else {
                 echo "<p>No appointments found for this customer.</p>";
             }
-        } else {
-            echo "Customer or bikes not found.";
-        }
         $conn->close();
     ?>
 </div>

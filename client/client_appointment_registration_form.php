@@ -209,7 +209,7 @@ include '../login/auth.php'; // Include authentication check
     <ul id="selectedServices"></ul>
 
     <label for="price">Estimated price:<span style="color: red;">*</span></label>
-    <input type="number" id="price" name="price" required>
+    <input type="number" id="price" name="price" value="0" required>
     <script>
         const priceInput = document.getElementById('price');
 
@@ -244,7 +244,7 @@ include '../login/auth.php'; // Include authentication check
 
         // Fetch price for the selected service
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", "../get_price.php", true);
+        xhr.open("POST", "../processes/get_price.php", true);
         xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhr.send("type=" + encodeURIComponent(serviceType));
 
