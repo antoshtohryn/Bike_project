@@ -1,5 +1,5 @@
 <?php
-include 'login/auth.php';
+include '../login/auth.php';
 
 if (isset($_POST['id_customer'])) {
     $id_customer = intval($_POST['id_customer']); // Sanitize input

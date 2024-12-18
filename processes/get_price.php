@@ -1,5 +1,5 @@
 <?php
-include 'login/auth.php'; // Include authentication check
+include '../login/auth.php'; // Include authentication check
 
 // Check connection
 if ($conn->connect_error) {

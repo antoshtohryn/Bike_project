@@ -1,12 +1,12 @@
 <?php
-include 'login/auth.php'; // Include authentication check
+include '../login/auth.php'; // Include authentication check
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="../style.css">
     <title>BikeRegist</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -14,7 +14,7 @@ include 'login/auth.php'; // Include authentication check
 
 <div class="topbar">
     <div class="main"><a href="main.php"><button>BikeRegist</button></a></div>
-    <div class="logout"><a href="login/logout.php"><button>Logout</button></a></div>
+    <div class="logout"><a href="../login/logout.php"><button>Logout</button></a></div>
 </div>
 
 <div class="main-menu">
@@ -42,27 +42,39 @@ include 'login/auth.php'; // Include authentication check
     <script>
     function toggleStatus(idAppointment) {
     const currentStatus = document.getElementById("status").innerText;
-    const newStatus = currentStatus === "open" ? "closed" : "open";
+    const newStatus = currentStatus.includes("open") ? "closed" : "open";
 
     $.ajax({
-        url: "update_status.php",
+        url: "../processes/update_status.php",
         method: "POST",
         data: { id_appointment: idAppointment, new_status: newStatus },
         success: function(response) {
-            const data = JSON.parse(response);
-            if (data.success) {
-                // Update status on page
-                document.getElementById("status").innerText = newStatus === "open" ? "open" : "Completed on " + data.date_completed;
+            try {
+                const data = JSON.parse(response); // Parse response
+                if (data.success) {
+                    // Update status on page
+                    const statusElement = document.getElementById("status");
+                    const button = document.getElementById("statusButton");
 
-                // Update button text and style
-                const button = document.getElementById("statusButton");
-                button.innerText = newStatus === "open" ? "Close Appointment" : "Open Appointment";
-                button.className = newStatus === "open" ? "green" : "red";
-            } else {
-                alert("Error: " + data.message);
+                    if (newStatus === "open") {
+                        statusElement.innerText = "open";
+                        button.innerText = "Close Appointment";
+                        button.className = "green";
+                    } else {
+                        statusElement.innerText = "Completed on " + data.date_completed;
+                        button.innerText = "Open Appointment";
+                        button.className = "red";
+                    }
+                } else {
+                    alert("Error: " + data.message);
+                }
+            } catch (error) {
+                console.error("Error parsing response: ", response, error);
+                alert("Unexpected response format.");
             }
         },
-        error: function() {
+        error: function(xhr, status, error) {
+            console.error("AJAX error:", status, error);
             alert("An error occurred while updating the status.");
         }
     });
@@ -94,7 +106,7 @@ include 'login/auth.php'; // Include authentication check
     <div id="edit-modal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
-            <form method="POST" action="update_comment.php">
+            <form method="POST" action="../processes/update_comment.php">
                 <label for="comment-input">Edit Comment:</label><br>
                 <textarea id="comment_input" name="comment_input"><?php echo $appointment['comment']; ?></textarea><br>
                 <input type="hidden" name="id_appointment" value=<?php echo $id_appointment; ?>>
@@ -138,7 +150,7 @@ include 'login/auth.php'; // Include authentication check
     <div id="edit-price-modal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
-            <form method="POST" action="update_price.php">
+            <form method="POST" action="../processes/update_price.php">
                 <label for="price-input">Edit Price:</label><br>
                 <input type="number" id="price_input" name="price_input" value="<?php echo $appointment['price']; ?>"><br>
                 <input type="hidden" name="id_appointment" value="<?php echo $id_appointment; ?>">
@@ -180,9 +192,18 @@ include 'login/auth.php'; // Include authentication check
 
     <div class="card">
         <h2>Status</h2><br>
-        <p id="date_recieved">Schheduled for: <?php echo $appointment['date_recieved']; ?></p>
-        <p id="status"><?php echo $appointment['status']; ?></p>
+        <p id="date_recieved">Scheduled for: <?php echo $appointment['date_recieved']; ?></p>
+        <p id="status">
+            <?php
+            if ($appointment['status'] === 'open') {
+                echo 'open';
+            } else {
+                echo 'Completed on ' . $appointment['date_completed'];
+            }
+            ?>
+        </p>
     </div>
+
 
     <?php
             } else {

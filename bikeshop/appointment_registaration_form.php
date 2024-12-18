@@ -1,12 +1,12 @@
 <?php
-include 'login/auth.php'; // Include authentication check
+include '../login/auth.php'; // Include authentication check
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="../style.css">
     <title>BikeRegist</title>
     <style>
         /* General form styling */
@@ -54,7 +54,7 @@ include 'login/auth.php'; // Include authentication check
 
 <div class="topbar">
     <div class="main"><a href="main.php"><button>BikeRegist</button></a></div>
-    <div class="logout"><a href="login/logout.php"><button>Logout</button></a></div>
+    <div class="logout"><a href="../login/logout.php"><button>Logout</button></a></div>
 </div>
 
 <div class="main-menu">
@@ -67,7 +67,7 @@ include 'login/auth.php'; // Include authentication check
 
 <div class="content">
         <div class="customer-input">
-        <form method="POST" action="appointment_registration_process.php" id="appointmentForm">
+        <form method="POST" action="../processes/appointment_registration_process.php" id="appointmentForm">
             
 
             <?php
@@ -220,7 +220,7 @@ include 'login/auth.php'; // Include authentication check
 
                     // Fetch bikes based on selected customer
                     if (selectedCustomerId) {
-                        fetch('get_bikes_by_customer.php', {
+                        fetch('../processes/get_bikes_by_customer.php', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -308,7 +308,7 @@ include 'login/auth.php'; // Include authentication check
 
         // Fetch price for the selected service
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", "get_price.php", true);
+        xhr.open("POST", "../processes/get_price.php", true);
         xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhr.send("type=" + encodeURIComponent(serviceType));
 

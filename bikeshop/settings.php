@@ -1,19 +1,19 @@
 <?php
-include 'login/auth.php'; // Include authentication check
+include '../login/auth.php'; // Include authentication check
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
     <title>Settings</title>
 </head>
 <body>
 
 <div class="topbar">
     <div class="main"><a href="main.php"><button>BikeRegist</button></a></div>
-    <div class="logout"><a href="login/logout.php"><button>Logout</button></a></div>
+    <div class="logout"><a href="../login/logout.php"><button>Logout</button></a></div>
 </div>
 
 <div class="main-menu">
@@ -27,7 +27,7 @@ include 'login/auth.php'; // Include authentication check
 <div class="content">
     <div class="container">
         <div class="image-button" onclick="openPage_service()">
-            <img src="service_pic.png" alt="Click Me">
+            <img src="../service_pic.png" alt="Click Me">
             <!-- Label below the image -->
             <h3>Add new service</h3>
         </div>
@@ -40,7 +40,7 @@ include 'login/auth.php'; // Include authentication check
         </script>
 
         <div class="image-button" onclick="openPage_statistics()">
-            <img src="stat.jpg" alt="Click Me">
+            <img src="../stat.jpg" alt="Click Me">
             <!-- Label below the image -->
             <h3>Statistics</h3>
         </div>

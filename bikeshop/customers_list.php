@@ -1,5 +1,5 @@
 <?php
-include 'login/auth.php'; // Include authentication check
+include '../login/auth.php'; // Include authentication check
 ?>
 
 <!DOCTYPE html>
@@ -7,14 +7,14 @@ include 'login/auth.php'; // Include authentication check
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="../style.css">
     <title>BikeRegist</title>
 </head>
 <body>
 
 <div class="topbar">
     <div class="main"><a href="main.php"><button>BikeRegist</button></a></div>
-    <div class="logout"><a href="login/logout.php"><button>Logout</button></a></div>
+    <div class="logout"><a href="../login/logout.php"><button>Logout</button></a></div>
 </div>
 
 <div class="main-menu">

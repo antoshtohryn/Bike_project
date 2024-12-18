@@ -33,6 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         // Check if the entered password matches the hashed password
         if ($user && password_verify($login_pass, $user['password'])) {
+            $_SESSION['login_date'] = date('Y-m-d');
             // Check if the user is the admin
             if ($login_user === 'bikeshop') {
                 // Redirect admin to calendar

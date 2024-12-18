@@ -1,19 +1,19 @@
 <?php
-include 'login/auth.php'; // Include authentication check
+include '../login/auth.php'; // Include authentication check
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="../style.css">
     <title>BikeRegist</title>
 </head>
 <body>
 
 <div class="topbar">
     <div class="main"><a href="main.php"><button>BikeRegist</button></a></div>
-    <div class="logout"><a href="login/logout.php"><button>Logout</button></a></div>
+    <div class="logout"><a href="../login/logout.php"><button>Logout</button></a></div>
 </div>
 
 <div class="main-menu">
@@ -90,19 +90,13 @@ if ($bikeResult->num_rows > 0) {
     }
 }
 
-    // Get the last inserted bike ID
-    $query_id_bike = "SELECT id_bike FROM bike ORDER BY id_bike DESC LIMIT 1";
-    $query = mysqli_query($conn, $query_id_bike);
-    $row = $query->fetch_assoc();
-    $id_bike = $row['id_bike'];
-
     $selected_services = $_POST['selected_services']; // This is the comma-separated string
     // Insert the appointment
     $conn->query("INSERT INTO appointment VALUES (null, $id_customer, $id_bike, '$selected_services', $price, 'open', '$comment', '$date', '$date')");
 
     echo "Appointment added to the Database";
     // Redirect to appointment list
-    header("Location: appointment_list.php");
+    header("Location: ../bikeshop/appointment_list.php");
     exit(); // Ensure no further code is executed after redirection
 }
 $conn->close();

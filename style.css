@@ -509,7 +509,7 @@ h1 {
     display: grid;
     grid-template-columns: repeat(7, 1fr); /* 7 columns for the days of the week */
     grid-template-rows: repeat(6, auto); /* 6 rows to accommodate all days of the month */
-    gap: 10px;
+    gap: 5px;
     padding: 10px;
     max-width: 100%;
 }

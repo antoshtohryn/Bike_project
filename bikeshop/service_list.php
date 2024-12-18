@@ -1,5 +1,5 @@
 <?php
-include 'login/auth.php'; // Include authentication check
+include '../login/auth.php'; // Include authentication check
 
 // Handle form submission to add a new service
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_service'])) {
@@ -37,7 +37,7 @@ $result = $conn->query($selectQuery);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
     <title>Settings</title>
     <style>
         .service-form {
@@ -83,7 +83,7 @@ $result = $conn->query($selectQuery);
 
 <div class="topbar">
     <div class="main"><a href="main.php"><button>BikeRegist</button></a></div>
-    <div class="logout"><a href="login/logout.php"><button>Logout</button></a></div>
+    <div class="logout"><a href="../login/logout.php"><button>Logout</button></a></div>
 </div>
 
 <div class="main-menu">

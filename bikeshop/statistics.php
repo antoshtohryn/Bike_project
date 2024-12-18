@@ -1,5 +1,5 @@
 <?php
-include 'login/auth.php'; // Include authentication check
+include '../login/auth.php'; // Include authentication check
 ?>
 
 <!DOCTYPE html>
@@ -9,7 +9,7 @@ include 'login/auth.php'; // Include authentication check
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statistics - Completed Appointments</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Include Chart.js -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
     <style>
         /* Canvas Styling */
         canvas {
@@ -31,7 +31,7 @@ include 'login/auth.php'; // Include authentication check
 
 <div class="topbar">
     <div class="main"><a href="main.php"><button>BikeRegist</button></a></div>
-    <div class="logout"><a href="login/logout.php"><button>Logout</button></a></div>
+    <div class="logout"><a href="../login/logout.php"><button>Logout</button></a></div>
 </div>
 
 <div class="main-menu">

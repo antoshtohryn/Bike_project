@@ -1,20 +1,22 @@
 <?php
-include 'login/auth.php'; // Include authentication check
+include '../login/auth.php'; // Include authentication check
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="../style.css">
     <title>BikeRegist</title>
+    <style>
+
+    </style>
 </head>
 <body>
 
 <div class="topbar">
     <div class="main"><a href="main.php"><button>BikeRegist</button></a></div>
-    <div class="logout"><a href="login/logout.php"><button>Logout</button></a></div>
+    <div class="logout"><a href="../login/logout.php"><button>Logout</button></a></div>
 </div>
 
 <div class="main-menu">
@@ -29,9 +31,9 @@ include 'login/auth.php'; // Include authentication check
     <form method="get" action="search.php">
         <label for="search">Search by Customer surname or Bike brand:</label>
         <input type="search" id="search" class="search-input" name="search" placeholder="..." required>
-        <input type="submit" name="search-button" value="Search">
+        <input type="submit" name="search-button" value="Search"> 
     </form>
-
+    
     <div class="content_buttons">
         <!-- Create New Form -->
         <form method="POST" action="appointment_registaration_form.php"> 
@@ -48,15 +50,14 @@ include 'login/auth.php'; // Include authentication check
         </form>
     </div>
 
-    <h1>All appointments</h1>
+    <h1>Schedule</h1>
 
     <?php
-    // Initialize variables for date range or specific date
+    // Initialize date range filter variables
     $from_date = isset($_GET['from_date']) ? $_GET['from_date'] : null;
     $to_date = isset($_GET['to_date']) ? $_GET['to_date'] : null;
-    $date = isset($_GET['date']) ? $_GET['date'] : null;  // New variable for specific date filter
 
-    // Base query
+    // Base query with "open" status filter
     $query = "
         SELECT 
             appointment.id_appointment, 
@@ -69,19 +70,20 @@ include 'login/auth.php'; // Include authentication check
         FROM appointment 
         JOIN customer ON appointment.id_customer = customer.id_customer
         JOIN bike ON appointment.id_bike = bike.id_bike
+        WHERE appointment.status = 'open'
     ";
 
-    // Add conditions for date filtering if dates are provided
+    // Add date range filters to the query if provided
     $conditions = [];
-    if ($date) {
-        $conditions[] = "DATE(appointment.date_recieved) = '$date'"; // Filter by specific date
-    } else {
-        if ($from_date) {
-            $conditions[] = "appointment.date_recieved >= '$from_date'";
-        }
-        if ($to_date) {
-            $conditions[] = "appointment.date_recieved <= '$to_date'";
-        }
+    if ($from_date) {
+        $conditions[] = "appointment.date_recieved >= '$from_date'";
+    }
+    if ($to_date) {
+        $conditions[] = "appointment.date_recieved <= '$to_date'";
+    }
+
+    if (count($conditions) > 0) {
+        $query .= " AND " . implode(' AND ', $conditions);
     }
 
     // Apply the date filter conditions
@@ -95,17 +97,17 @@ include 'login/auth.php'; // Include authentication check
     $query .= " ORDER BY appointment.date_recieved ASC"; // Change ASC to DESC if you want descending order.
 
     $result = $conn->query($query);
-
+    
     if ($result) {
         $rows = mysqli_num_rows($result); 
         print "<table>
-                <tr>
-                    <th>ID</th>
-                    <th>Customer</th>
-                    <th>Bike</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                </tr>";
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer</th>
+                        <th>Bike</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>";
 
         while ($row = $result->fetch_assoc()) {
             $statusClass = $row["status"] === "open" ? "text-open" : "text-closed";
@@ -126,5 +128,6 @@ include 'login/auth.php'; // Include authentication check
     $conn->close();
     ?>
 </div>
+
 </body>
 </html>

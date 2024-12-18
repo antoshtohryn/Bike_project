@@ -1,5 +1,5 @@
 <?php
-include 'login/auth.php'; // Include authentication check
+include '../login/auth.php'; // Include authentication check
 
 // Update the comment in the database
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($stmt->execute()) {
         echo "Comment updated successfully.";
-        header("Location: appointment_details.php?id_appointment=$id_appointment"); // Redirect to the page
+        header("Location: ../bikeshop/appointment_details.php?id_appointment=$id_appointment"); // Redirect to the page
         exit();
     } else {
         echo "Error updating comment: " . $conn->error;
