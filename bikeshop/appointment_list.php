@@ -26,9 +26,11 @@ include '../login/auth.php'; // Include authentication check
 </div>
 
 <div class="content">
-    <form method="get" action="search.php">
+    <form method="get" action="">
         <label for="search">Search by Customer surname or Bike brand:</label>
-        <input type="search" id="search" class="search-input" name="search" placeholder="..." required>
+        <input type="search" id="search" class="search-input" name="search" placeholder="Enter surname or bike brand..." value="<?= isset($_GET['search']) ? $_GET['search'] : '' ?>">
+        <input type="hidden" name="from_date" value="<?= isset($_GET['from_date']) ? $_GET['from_date'] : '' ?>">
+        <input type="hidden" name="to_date" value="<?= isset($_GET['to_date']) ? $_GET['to_date'] : '' ?>">
         <input type="submit" name="search-button" value="Search">
     </form>
 
@@ -40,6 +42,7 @@ include '../login/auth.php'; // Include authentication check
 
         <!-- Filter Form -->
         <form method="get" action="" class="filter-form">
+            <input type="hidden" name="search" value="<?= isset($_GET['search']) ? $_GET['search'] : '' ?>">
             <label for="from-date">From:</label>
             <input type="date" id="from-date" name="from_date" value="<?= isset($_GET['from_date']) ? $_GET['from_date'] : '' ?>">
             <label for="to-date">To:</label>
@@ -48,13 +51,13 @@ include '../login/auth.php'; // Include authentication check
         </form>
     </div>
 
-    <h1>All appointments</h1>
+    <h1>All Appointments</h1>
 
     <?php
-    // Initialize variables for date range or specific date
+    // Initialize variables for filters
+    $search = isset($_GET['search']) ? trim($_GET['search']) : null;
     $from_date = isset($_GET['from_date']) ? $_GET['from_date'] : null;
     $to_date = isset($_GET['to_date']) ? $_GET['to_date'] : null;
-    $date = isset($_GET['date']) ? $_GET['date'] : null;  // New variable for specific date filter
 
     // Base query
     $query = "
@@ -71,34 +74,29 @@ include '../login/auth.php'; // Include authentication check
         JOIN bike ON appointment.id_bike = bike.id_bike
     ";
 
-    // Add conditions for date filtering if dates are provided
+    // Add conditions dynamically
     $conditions = [];
-    if ($date) {
-        $conditions[] = "DATE(appointment.date_recieved) = '$date'"; // Filter by specific date
-    } else {
-        if ($from_date) {
-            $conditions[] = "appointment.date_recieved >= '$from_date'";
-        }
-        if ($to_date) {
-            $conditions[] = "appointment.date_recieved <= '$to_date'";
-        }
+    if ($search) {
+        $conditions[] = "(customer.surname LIKE '%$search%' OR bike.brand LIKE '%$search%')";
+    }
+    if ($from_date) {
+        $conditions[] = "appointment.date_recieved >= '$from_date'";
+    }
+    if ($to_date) {
+        $conditions[] = "appointment.date_recieved <= '$to_date'";
     }
 
-    // Apply the date filter conditions
     if (count($conditions) > 0) {
         $query .= " WHERE " . implode(' AND ', $conditions);
     }
 
-    // Add ORDER BY to sort by the appointment date (ascending or descending)
-    // You can add "ASC" for ascending or "DESC" for descending.
-    // By default, let's sort in ascending order.
-    $query .= " ORDER BY appointment.date_recieved ASC"; // Change ASC to DESC if you want descending order.
+    // Sort results by date received
+    $query .= " ORDER BY appointment.date_recieved ASC";
 
     $result = $conn->query($query);
 
-    if ($result) {
-        $rows = mysqli_num_rows($result); 
-        print "<table>
+    if ($result && $result->num_rows > 0) {
+        echo "<table>
                 <tr>
                     <th>ID</th>
                     <th>Customer</th>
@@ -110,19 +108,20 @@ include '../login/auth.php'; // Include authentication check
         while ($row = $result->fetch_assoc()) {
             $statusClass = $row["status"] === "open" ? "text-open" : "text-closed";
         
-            print "<tr onclick=\"window.location='appointment_details.php?id_appointment=" . $row["id_appointment"] . "'\">";
-            print "<td>" . $row["id_appointment"] . "</td>";
-            print "<td>" . $row["name"] . " " . $row["surname"] . "</td>";
-            print "<td>" . $row["brand"] . " " . $row["model"] . "</td>";
-            print "<td><span class='$statusClass'>" . ucfirst($row["status"]) . "</span></td>";
-            print "<td>" . $row["date_recieved"] . "</td>";
-            print "</tr>";
-        }                
+            echo "<tr onclick=\"window.location='appointment_details.php?id_appointment=" . $row["id_appointment"] . "'\">";
+            echo "<td>" . $row["id_appointment"] . "</td>";
+            echo "<td>" . $row["name"] . " " . $row["surname"] . "</td>";
+            echo "<td>" . $row["brand"] . " " . $row["model"] . "</td>";
+            echo "<td><span class='$statusClass'>" . ucfirst($row["status"]) . "</span></td>";
+            echo "<td>" . $row["date_recieved"] . "</td>";
+            echo "</tr>";
+        }
+
+        echo "</table>";
     } else {
-        print "No appointments found.";
+        echo "<p>No appointments found.</p>";
     }
 
-    print "</table>";
     $conn->close();
     ?>
 </div>

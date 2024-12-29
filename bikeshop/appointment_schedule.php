@@ -8,9 +8,6 @@ include '../login/auth.php'; // Include authentication check
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../style.css">
     <title>BikeRegist</title>
-    <style>
-
-    </style>
 </head>
 <body>
 
@@ -28,12 +25,15 @@ include '../login/auth.php'; // Include authentication check
 </div>
 
 <div class="content">
-    <form method="get" action="search.php">
+    <!-- Search Form -->
+    <form method="get" action="">
         <label for="search">Search by Customer surname or Bike brand:</label>
-        <input type="search" id="search" class="search-input" name="search" placeholder="..." required>
-        <input type="submit" name="search-button" value="Search"> 
+        <input type="search" id="search" class="search-input" name="search" placeholder="Enter surname or bike brand..." value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
+        <input type="hidden" name="from_date" value="<?= isset($_GET['from_date']) ? htmlspecialchars($_GET['from_date']) : '' ?>">
+        <input type="hidden" name="to_date" value="<?= isset($_GET['to_date']) ? htmlspecialchars($_GET['to_date']) : '' ?>">
+        <input type="submit" name="search-button" value="Search">
     </form>
-    
+
     <div class="content_buttons">
         <!-- Create New Form -->
         <form method="POST" action="appointment_registaration_form.php"> 
@@ -42,10 +42,11 @@ include '../login/auth.php'; // Include authentication check
 
         <!-- Filter Form -->
         <form method="get" action="" class="filter-form">
+            <input type="hidden" name="search" value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
             <label for="from-date">From:</label>
-            <input type="date" id="from-date" name="from_date" value="<?= isset($_GET['from_date']) ? $_GET['from_date'] : '' ?>">
+            <input type="date" id="from-date" name="from_date" value="<?= isset($_GET['from_date']) ? htmlspecialchars($_GET['from_date']) : '' ?>">
             <label for="to-date">To:</label>
-            <input type="date" id="to-date" name="to_date" value="<?= isset($_GET['to_date']) ? $_GET['to_date'] : '' ?>">
+            <input type="date" id="to-date" name="to_date" value="<?= isset($_GET['to_date']) ? htmlspecialchars($_GET['to_date']) : '' ?>">
             <input type="submit" value="Filter">
         </form>
     </div>
@@ -53,7 +54,8 @@ include '../login/auth.php'; // Include authentication check
     <h1>Schedule</h1>
 
     <?php
-    // Initialize date range filter variables
+    // Initialize variables for search and date filters
+    $search = isset($_GET['search']) ? trim($_GET['search']) : null;
     $from_date = isset($_GET['from_date']) ? $_GET['from_date'] : null;
     $to_date = isset($_GET['to_date']) ? $_GET['to_date'] : null;
 
@@ -73,58 +75,53 @@ include '../login/auth.php'; // Include authentication check
         WHERE appointment.status = 'open'
     ";
 
-    // Add date range filters to the query if provided
+    // Add conditions for search and date filters
     $conditions = [];
+    if ($search) {
+        $conditions[] = "(customer.surname LIKE '%" . $conn->real_escape_string($search) . "%' OR bike.brand LIKE '%" . $conn->real_escape_string($search) . "%')";
+    }
     if ($from_date) {
-        $conditions[] = "appointment.date_recieved >= '$from_date'";
+        $conditions[] = "appointment.date_recieved >= '" . $conn->real_escape_string($from_date) . "'";
     }
     if ($to_date) {
-        $conditions[] = "appointment.date_recieved <= '$to_date'";
+        $conditions[] = "appointment.date_recieved <= '" . $conn->real_escape_string($to_date) . "'";
     }
 
     if (count($conditions) > 0) {
         $query .= " AND " . implode(' AND ', $conditions);
     }
 
-    // Apply the date filter conditions
-    if (count($conditions) > 0) {
-        $query .= " WHERE " . implode(' AND ', $conditions);
-    }
-
-    // Add ORDER BY to sort by the appointment date (ascending or descending)
-    // You can add "ASC" for ascending or "DESC" for descending.
-    // By default, let's sort in ascending order.
-    $query .= " ORDER BY appointment.date_recieved ASC"; // Change ASC to DESC if you want descending order.
+    // Add ORDER BY to sort by the appointment date
+    $query .= " ORDER BY appointment.date_recieved ASC";
 
     $result = $conn->query($query);
-    
-    if ($result) {
-        $rows = mysqli_num_rows($result); 
-        print "<table>
-                    <tr>
-                        <th>ID</th>
-                        <th>Customer</th>
-                        <th>Bike</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                    </tr>";
+
+    if ($result && $result->num_rows > 0) {
+        echo "<table>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Bike</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>";
 
         while ($row = $result->fetch_assoc()) {
             $statusClass = $row["status"] === "open" ? "text-open" : "text-closed";
         
-            print "<tr onclick=\"window.location='appointment_details.php?id_appointment=" . $row["id_appointment"] . "'\">";
-            print "<td>" . $row["id_appointment"] . "</td>";
-            print "<td>" . $row["name"] . " " . $row["surname"] . "</td>";
-            print "<td>" . $row["brand"] . " " . $row["model"] . "</td>";
-            print "<td><span class='$statusClass'>" . ucfirst($row["status"]) . "</span></td>";
-            print "<td>" . $row["date_recieved"] . "</td>";
-            print "</tr>";
-        }                
+            echo "<tr onclick=\"window.location='appointment_details.php?id_appointment=" . $row["id_appointment"] . "'\">";
+            echo "<td>" . $row["id_appointment"] . "</td>";
+            echo "<td>" . htmlspecialchars($row["name"]) . " " . htmlspecialchars($row["surname"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["brand"]) . " " . htmlspecialchars($row["model"]) . "</td>";
+            echo "<td><span class='$statusClass'>" . ucfirst(htmlspecialchars($row["status"])) . "</span></td>";
+            echo "<td>" . htmlspecialchars($row["date_recieved"]) . "</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
     } else {
-        print "No appointments found.";
+        echo "<p>No appointments found.</p>";
     }
 
-    print "</table>";
     $conn->close();
     ?>
 </div>

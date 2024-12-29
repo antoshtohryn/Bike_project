@@ -26,42 +26,54 @@ include '../login/auth.php'; // Include authentication check
 </div>
 
 <div class="content">
-    <form method="get" action="search.php">
-        <label for="search">Search by Customer surname or Bike brand:</label>
-        <input type="search" id="search" class="search-input" name="search" placeholder="..." required>
+    <form method="get" action="">
+        <label for="search">Search by surname:</label>
+        <input type="search" id="search" class="search-input" name="search" placeholder="Enter surname..." required>
         <input type="submit" name="search-button" value="Search">
     </form>
     <h1>All customers</h1>
 
     <div class="content_buttons">
     <?php
-    // Base query
-    $query = "SELECT * from customer";
+    // Get the search value
+    $search = isset($_GET['search']) ? trim($_GET['search']) : '';
     
-    $result = $conn->query($query);
+    // Query to fetch customers based on the search
+    if (!empty($search)) {
+        $query = "SELECT * FROM customer WHERE surname LIKE ?";
+        $stmt = $conn->prepare($query);
+        $searchParam = "%$search%";
+        $stmt->bind_param("s", $searchParam);
+    } else {
+        $query = "SELECT * FROM customer";
+        $stmt = $conn->prepare($query);
+    }
+    
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if ($result) {
-        $rows = mysqli_num_rows($result); 
-        print "<table>
+    if ($result && $result->num_rows > 0) {
+        echo "<table>
                 <tr>
                     <th>ID</th>
                     <th>Customer</th>
                 </tr>";
 
         while ($row = $result->fetch_assoc()) {
-           
-            print "<tr onclick=\"window.location='customer_details.php?id_customer=" . $row["id_customer"] . "'\">";
-            print "<td>" . $row["id_customer"] . "</td>";
-            print "<td>" . $row["name"] . " " . $row["surname"] . "</td>";
-            print "</tr>";
+            echo "<tr onclick=\"window.location='customer_details.php?id_customer=" . $row["id_customer"] . "'\">";
+            echo "<td>" . $row["id_customer"] . "</td>";
+            echo "<td>" . $row["name"] . " " . $row["surname"] . "</td>";
+            echo "</tr>";
         }                
+        echo "</table>";
     } else {
-        print "No appointments found.";
+        echo "<p>No customers found.</p>";
     }
 
-    print "</table>";
+    $stmt->close();
     $conn->close();
     ?>
+    </div>
 </div>
 </body>
 </html>

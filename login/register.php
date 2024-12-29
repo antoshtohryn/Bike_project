@@ -274,7 +274,12 @@ p.info {
             <input type="text" id="username" name="username" required><br>
             
             <label for="password">Password: <span style="color: red;">*</span></label>
-            <input type="password" id="password" name="password" required><br>
+            <input type="password" id="password" name="password" 
+                required 
+                minlength="8"
+                pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}" 
+                title="Password must be at least 8 characters, include at least one uppercase letter, one lowercase letter, one number, and one special character.">
+            <br>
             
             <input type="submit" value="Register">
         </form>

@@ -222,7 +222,12 @@ button[type="submit"]:hover {
             <input type="password" id="old_password" name="old_password" required>
 
             <label for="new_password">New Password:</label>
-            <input type="password" id="new_password" name="new_password" required>
+            <input type="password" id="new_password" name="new_password" 
+                required 
+                minlength="8"
+                pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}" 
+                title="Password must be at least 8 characters, include at least one uppercase letter, one lowercase letter, one number, and one special character.">
+            <br>
 
             <label for="confirm_password">Confirm New Password:</label>
             <input type="password" id="confirm_password" name="confirm_password" required>

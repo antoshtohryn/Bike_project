@@ -53,7 +53,7 @@ include '../login/auth.php'; // Include authentication check
 <body>
 
 <div class="topbar">
-    <div class="main"><a href="main.php"><button>BikeRegist</button></a></div>
+    <div class="main"><a href="client.php"><button>BikeRegist</button></a></div>
     <div class="logout"><a href="../login/logout.php"><button>Logout</button></a></div>
 </div>
 
