@@ -39,46 +39,140 @@ include '../login/auth.php'; // Include authentication check
             if ($result->num_rows > 0) {
                 $appointment = $result->fetch_assoc();
     ?>
+
+    <button id="reschedule-button">Reschedule</button>
+
+    <!-- Modal for Rescheduling -->
+    <div id="reschedule-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <form method="POST" action="../processes/reschedule_appointment.php">
+                <label for="reschedule-date">Select New Date:</label><br>
+                <input type="date" id="reschedule-date" name="reschedule_date" required><br>
+                <input type="hidden" name="id_appointment" value="<?php echo $id_appointment; ?>">
+                <button type="submit">Save</button>
+            </form>
+            <!-- Error message -->
+            <div id="date-error-message" style="color: red; display: none;">
+                The chosen date is overloaded with appointments. Please choose another date.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get elements for the reschedule modal
+        const rescheduleButton = document.getElementById("reschedule-button");
+        const rescheduleModal = document.getElementById("reschedule-modal");
+        const rescheduleCloseButton = document.querySelector("#reschedule-modal .close-button");
+        const rescheduleDateInput = document.getElementById("reschedule-date");
+        const dateErrorMessage = document.getElementById("date-error-message");
+
+        // Open the reschedule modal
+        rescheduleButton.addEventListener("click", () => {
+            rescheduleModal.style.display = "block";
+        });
+
+        // Close the reschedule modal
+        rescheduleCloseButton.addEventListener("click", () => {
+            rescheduleModal.style.display = "none";
+        });
+
+        // Close the modal when clicking outside of it
+        window.addEventListener("click", (event) => {
+            if (event.target === rescheduleModal) {
+                rescheduleModal.style.display = "none";
+            }
+        });
+
+        // Disable Sundays in the date picker
+        rescheduleDateInput.addEventListener("focus", () => {
+            const today = new Date();
+            const currentDate = today.toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+            rescheduleDateInput.setAttribute('min', currentDate); // Set the minimum date to today
+
+            // Disable Sundays
+            rescheduleDateInput.addEventListener("input", () => {
+                const selectedDate = new Date(rescheduleDateInput.value);
+                if (selectedDate.getDay() === 0) { // 0 corresponds to Sunday
+                    alert("Sundays are not allowed for appointments.");
+                    rescheduleDateInput.value = ""; // Clear the input if Sunday is selected
+                }
+            });
+        });
+
+        // Check appointments when the date is selected
+        rescheduleDateInput.addEventListener("change", () => {
+            const selectedDate = rescheduleDateInput.value;
+            if (selectedDate) {
+                // Send an AJAX request to check the number of appointments on the selected date
+                $.ajax({
+                    url: "../processes/check_appointments.php",
+                    method: "GET",
+                    data: { date: selectedDate },
+                    success: function(response) {
+                        try {
+                            const data = JSON.parse(response);
+                            if (data.appointment_count >= 5) {
+                                // If there are more than 5 appointments, show the error message
+                                dateErrorMessage.style.display = "block";
+                            } else {
+                                // Hide the error message if there are 5 or fewer appointments
+                                dateErrorMessage.style.display = "none";
+                            }
+                        } catch (error) {
+                            console.error("Error parsing response: ", response, error);
+                            alert("An error occurred while checking the date.");
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX error:", status, error);
+                        alert("An error occurred while checking the date.");
+                    }
+                });
+            }
+        });
+    </script>
+
     <script>
     function toggleStatus(idAppointment) {
-    const currentStatus = document.getElementById("status").innerText;
-    const newStatus = currentStatus.includes("open") ? "closed" : "open";
+        const currentStatus = document.getElementById("status").innerText;
+        const newStatus = currentStatus.includes("open") ? "closed" : "open";
 
-    $.ajax({
-        url: "../processes/update_status.php",
-        method: "POST",
-        data: { id_appointment: idAppointment, new_status: newStatus },
-        success: function(response) {
-            try {
-                const data = JSON.parse(response); // Parse response
-                if (data.success) {
-                    // Update status on page
-                    const statusElement = document.getElementById("status");
-                    const button = document.getElementById("statusButton");
+        $.ajax({
+            url: "../processes/update_status.php",
+            method: "POST",
+            data: { id_appointment: idAppointment, new_status: newStatus },
+            success: function(response) {
+                try {
+                    const data = JSON.parse(response); // Parse response
+                    if (data.success) {
+                        // Update status on page
+                        const statusElement = document.getElementById("status");
+                        const button = document.getElementById("statusButton");
 
-                    if (newStatus === "open") {
-                        statusElement.innerText = "open";
-                        button.innerText = "Close Appointment";
-                        button.className = "green";
+                        if (newStatus === "open") {
+                            statusElement.innerText = "open";
+                            button.innerText = "Close Appointment";
+                            button.className = "green";
+                        } else {
+                            statusElement.innerText = "Completed on " + data.date_completed;
+                            button.innerText = "Open Appointment";
+                            button.className = "red";
+                        }
                     } else {
-                        statusElement.innerText = "Completed on " + data.date_completed;
-                        button.innerText = "Open Appointment";
-                        button.className = "red";
+                        alert("Error: " + data.message);
                     }
-                } else {
-                    alert("Error: " + data.message);
+                } catch (error) {
+                    console.error("Error parsing response: ", response, error);
+                    alert("Unexpected response format.");
                 }
-            } catch (error) {
-                console.error("Error parsing response: ", response, error);
-                alert("Unexpected response format.");
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX error:", status, error);
+                alert("An error occurred while updating the status.");
             }
-        },
-        error: function(xhr, status, error) {
-            console.error("AJAX error:", status, error);
-            alert("An error occurred while updating the status.");
-        }
-    });
-}
+        });
+    }
 
     </script>
 
@@ -87,6 +181,51 @@ include '../login/auth.php'; // Include authentication check
             onclick="toggleStatus(<?php echo $appointment['id_appointment']; ?>)">
         <?php echo $appointment['status'] === 'open' ? 'Close Appointment' : 'Open Appointment'; ?>
     </button>
+
+    <button type="button" id="deleteBtn" onclick="confirmDelete()">Delete Appointment</button>
+
+<!-- Hidden input to store the appointment ID -->
+<input type="hidden" id="id_appointment" value="<?php echo $id_appointment; ?>" />
+
+<script>
+    // Confirm delete and send AJAX request to delete the appointment
+    function confirmDelete() {
+        // Display a confirmation pop-up
+        const confirmation = confirm("Are you sure you want to delete this appointment? This action cannot be undone.");
+
+        // If user confirms, call the delete function
+        if (confirmation) {
+            const id_appointment = document.getElementById('id_appointment').value;
+            deleteAppointment(id_appointment);  // Delete the appointment
+        }
+    }
+
+    // Function to delete the appointment
+    function deleteAppointment(id) {
+        if (id) {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "../processes/delete_appointment.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            // Send appointment ID to server
+            xhr.send("id_appointment=" + encodeURIComponent(id));
+
+            // Handle server response
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    alert("Appointment deleted successfully.");
+                    window.location.href = "appointment_list.php";  // Redirect to the appointment list
+                } else {
+                    alert("An error occurred while deleting the appointment.");
+                }
+            };
+        } else {
+            alert("Invalid appointment ID.");
+        }
+    }
+</script>
+
+
 
     <h1>Appointment Details</h1>
 

@@ -100,8 +100,38 @@ $result = $conn->query($selectQuery);
     <!-- Input Form -->
     <form method="POST" class="service-form">
         <input type="text" name="type" placeholder="Service Type" required>
-        <input type="number" name="price" placeholder="Price" min="0" required>
-        <input type="number" name="time_mins" placeholder="Time (mins)" min="0" required>
+        <input type="number" id="price" name="price" placeholder="Price" min="0" required>
+        <script>
+            const priceInput = document.getElementById('price');
+
+            priceInput.addEventListener('input', function() {
+                let value = priceInput.value;
+
+                // Restrict the input to a maximum of 4 digits and prevent dots
+                const regex = /^\d{0,4}$/;
+
+                // If the input doesn't match the regex, slice the value to ensure it fits
+                if (!regex.test(value)) {
+                    priceInput.value = value.slice(0, 4); // Maximum of 4 digits
+                }
+            });
+        </script>
+        <input type="number" id="time" name="time_mins" placeholder="Time (mins)" min="0" required>
+        <script>
+        const timeInput = document.getElementById('time');
+
+        timeInput.addEventListener('input', function() {
+            let value = timeInput.value;
+
+            // Restrict the input to a maximum of 3 digits and prevent dots
+            const regex = /^\d{0,3}$/;
+
+            // If the input doesn't match the regex, slice the value to ensure it fits
+            if (!regex.test(value)) {
+                timeInput.value = value.slice(0, 3); // Maximum of 3 digits
+            }
+        });
+    </script>
         <button type="submit" name="add_service">Add Service</button>
     </form>
 

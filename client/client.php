@@ -129,7 +129,78 @@ include '../login/auth.php'; // Include authentication check
             }
         $conn->close();
     ?>
+
+    
+    <!-- DELETE ACCOUNT BUTTON -->
+    <div class="delete-account">
+       <br><button id="deleteAccountBtn" onclick="openDeleteConfirmation()">Delete Account</button>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <h2>Are you sure you want to delete your account?</h2>
+            <p>This action will permanently delete your account, appointments, and all associated records. Please confirm!</p>
+            <button onclick="openPasswordConfirmation()">Confirm</button>
+            <button class="cancel" onclick="closeModal('confirmationModal')">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Password Confirmation Modal -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <h2>Confirm Your Identity</h2>
+            <form id="deleteAccountForm" method="POST" action="../processes/delete_account.php">
+                <label for="username">Username:</label>
+                <input type="text" name="username" id="username" required><br>
+
+                <label for="password">Password:</label>
+                <input type="text" name="password" id="password" required><br><br>
+
+                <button type="submit">Delete Account</button>
+                <button type="button" class="cancel" onclick="closeModal('passwordModal')">Cancel</button>
+            </form>
+        </div>
+    </div>
+
 </div>
+
+<script>
+    // Open the confirmation modal
+    function openDeleteConfirmation() {
+        document.getElementById("confirmationModal").style.display = "block";
+    }
+
+    // Open the password confirmation modal
+    function openPasswordConfirmation() {
+        document.getElementById("confirmationModal").style.display = "none";
+        document.getElementById("passwordModal").style.display = "block";
+    }
+
+    // Close a modal by its ID
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+    }
+
+    // Close the password modal after form submission
+    $(document).ready(function() {
+        $('#deleteAccountForm').submit(function(e) {
+            e.preventDefault(); // Prevent form from submitting normally
+
+            var username = $('#username').val();
+            var password = $('#password').val();
+
+            $.post('../processes/delete_account.php', {username: username, password: password}, function(response) {
+                if (response.success) {
+                    alert("Account deleted successfully!");
+                    window.location.href = '../login/login.php'; // Redirect to login page after account deletion
+                } else {
+                    alert(response.error || "An error occurred. Please try again.");
+                }
+            }, 'json');
+        });
+    });
+</script>
 
 </body>
 </html>
