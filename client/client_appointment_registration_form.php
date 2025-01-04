@@ -239,10 +239,16 @@ include '../login/auth.php'; // Include authentication check
     function addService() {
         const serviceType = document.getElementById("service").value;
 
+        // Check if no service is selected
+        if (!serviceType) {
+            alert("Please select a service.");
+            return; // Exit the function if no service is selected
+        }
+
         // Prevent adding a duplicate service
         if (selectedServices.some(service => service.type === serviceType)) {
             alert("This service is already selected.");
-      return;
+            return;
         }
 
         // Fetch price for the selected service
