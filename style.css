@@ -715,29 +715,37 @@ button:focus {
     transform: scale(1.05); /* Slight zoom effect */
 }
 
-#deleteAccountBtn {
+#deleteAccountBtn, #deleteBtn, #remove_service {
     background-color: #ff4d4d; /* Red background for a destructive action */
     color: white; /* White text */
     font-size: 16px;
-    font-weight: bold;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition */
 }
+#remove_service{
+    font-size: 13px;
+    padding: 5px 5px;
+    margin: 5px;
+}
 
-#deleteAccountBtn:hover {
+#deleteAccountBtn:hover, #deleteBtn:hover, #remove_service:hover {
     background-color: #e60000; /* Darker red when hovered */
     transform: scale(1.05); /* Slightly increase size when hovered */
 }
 
-#deleteAccountBtn:active {
+#deleteAccountBtn:active, #deleteBtn:active, #remove_service:active {
     background-color: #cc0000; /* Even darker red when clicked */
     transform: scale(1); /* Return to original size on click */
 }
 
-#deleteAccountBtn:focus {
+#deleteAccountBtn:focus, #deleteBtn:focus, #remove_service:focus {
     outline: none; /* Remove the default outline */
     box-shadow: 0 0 5px 2px rgba(255, 0, 0, 0.5); /* Add a red focus ring */
+}
+
+button{
+    font-weight: bold;
 }

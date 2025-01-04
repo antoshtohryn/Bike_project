@@ -93,7 +93,7 @@ include '../login/auth.php'; // Include authentication check
             $result = $conn->query($query);
             ?>
          
-            <h2>Appointment date</h2>
+         <h2>Appointment date</h2>
             <label for="date">Date: <span style="color: red;">*</span></label>
             <input type="date" id="date" name="date" min="<?= date('Y-m-d'); ?>" />
 
@@ -107,13 +107,16 @@ include '../login/auth.php'; // Include authentication check
                         alert('Sundays are not allowed!');
                         event.target.value = '<?= date('Y-m-d'); ?>'; // Reset the input field
                     }
+                 // Overload validation (more than 5 appointments on this date)
+                 const selectedDateStr = selectedDate.toISOString().split('T')[0];
+                    fetch(`../processes/check_appointments.php?date=${selectedDateStr}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.appointment_count >= 5) {
+                                alert('The chosen date is overloaded with appointments. You may still choose this date, but consider selecting another.');
+                            }
+                        });
                 });
-
-                // Get the current date in the format YYYY-MM-DD
-                const today = new Date().toISOString().split('T')[0];
-                
-                // Set the value of the date input to the current date
-                document.getElementById('date').value = today;
             </script>
 
             <h2>Bike</h2>
@@ -270,7 +273,7 @@ include '../login/auth.php'; // Include authentication check
         const listItem = document.createElement("li");
         listItem.innerHTML = `
             ${service.type} - €${service.price.toFixed(2)}
-            <button type="button" onclick="removeService(${index})">Remove</button>
+            <button id="removeService" type="button" onclick="removeService(${index})">Remove</button>
         `;
         serviceList.appendChild(listItem);
     });
