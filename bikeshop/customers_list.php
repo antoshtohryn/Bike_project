@@ -28,7 +28,7 @@ include '../login/auth.php'; // Include authentication check
 <div class="content">
     <form method="get" action="">
         <label for="search">Search by surname:</label>
-        <input type="search" id="search" class="search-input" name="search" placeholder="Enter surname..." required>
+        <input type="search" id="search" class="search-input" name="search" placeholder="Enter surname..." maxlength="20" required>
         <input type="submit" name="search-button" value="Search">
     </form>
     <h1>All customers</h1>

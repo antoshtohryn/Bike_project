@@ -92,13 +92,13 @@ include '../login/auth.php'; // Include authentication check
 
             <!-- Input fields for the customer details -->
             <label for="name">Name: <span style="color: red;">*</span></label>
-            <input type="text" id="name" name="name" required>
+            <input type="text" id="name" name="name" maxlength="20" required>
 
             <label for="surname">Surname: <span style="color: red;">*</span></label>
-            <input type="text" id="surname" name="surname" required>
+            <input type="text" id="surname" name="surname" maxlength="20" required>
 
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email">
+            <input type="email" id="email" name="email" maxlength="30">
 
             <label for="phone">Phone: <span style="color: red;">*</span></label><br>
             <input 
@@ -190,11 +190,11 @@ include '../login/auth.php'; // Include authentication check
                 </select>  
 
             <label for="name">Brand: <span style="color: red;">*</span></label>
-            <input type="text" id="brand" name="brand" required>
+            <input type="text" id="brand" name="brand" maxlength="30" required>
             <label for="name">Model: <span style="color: red;">*</span></label>
-            <input type="text" id="model" name="model" required>
+            <input type="text" id="model" name="model" maxlength="30" required>
             <label for="name">Year: <span style="color: red;">*</span></label>
-            <input type="number" id="year" name="year" required>
+            <input type="number" id="year" name="year" maxlength="30" required>
             <script>
                 const byearInput = document.getElementById('year');
 

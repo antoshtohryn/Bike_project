@@ -96,7 +96,7 @@ $conn->close();
 <div class="content">
     <form method="get" action="search.php">
         <label for="search">Search by Customer surname or Bike brand:</label>
-        <input type="search" id="search" class="search-input" name="search" placeholder="..." required>
+        <input type="search" id="search" class="search-input" name="search" placeholder="Enter surname or bike brand..." maxlength="30" required>
         <input type="submit" name="search-button" value="Search">
     </form>
 

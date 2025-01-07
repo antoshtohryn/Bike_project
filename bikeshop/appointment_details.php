@@ -299,6 +299,22 @@ include '../login/auth.php'; // Include authentication check
     </div>
 
     <script>
+        const priceInput = document.getElementById('price_input');
+
+        priceInput.addEventListener('input', function() {
+            let value = priceInput.value;
+
+            // Restrict the input to a maximum of 4 digits and prevent dots
+            const regex = /^\d{0,4}$/;
+
+            // If the input doesn't match the regex, slice the value to ensure it fits
+            if (!regex.test(value)) {
+                priceInput.value = value.slice(0, 4); // Maximum of 4 digits
+            }
+        });
+    </script>
+
+    <script>
         // Get elements for the price modal
         const priceEditButton = document.getElementById("price-edit-button");
         const priceModal = document.getElementById("edit-price-modal");

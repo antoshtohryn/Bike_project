@@ -92,7 +92,7 @@ if ($bikeResult->num_rows > 0) {
 
     $selected_services = $_POST['selected_services']; // This is the comma-separated string
     // Insert the appointment
-    $conn->query("INSERT INTO appointment VALUES (null, $id_customer, $id_bike, '$selected_services', $price, 'open', '$comment', '$date', '$date')");
+    $conn->query("INSERT INTO appointment VALUES (null, $id_customer, $id_bike, '$selected_services', $price, 'open', '$comment', '$date', '0000-00-00')");
 
     echo "Appointment added to the Database";
     // Redirect to appointment list

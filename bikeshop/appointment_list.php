@@ -28,7 +28,7 @@ include '../login/auth.php'; // Include authentication check
 <div class="content">
     <form method="get" action="">
         <label for="search">Search by Customer surname or Bike brand:</label>
-        <input type="search" id="search" class="search-input" name="search" placeholder="Enter surname or bike brand..." value="<?= isset($_GET['search']) ? $_GET['search'] : '' ?>">
+        <input type="search" id="search" class="search-input" name="search" placeholder="Enter surname or bike brand..." maxlength="30" value="<?= isset($_GET['search']) ? $_GET['search'] : '' ?>">
         <input type="hidden" name="from_date" value="<?= isset($_GET['from_date']) ? $_GET['from_date'] : '' ?>">
         <input type="hidden" name="to_date" value="<?= isset($_GET['to_date']) ? $_GET['to_date'] : '' ?>">
         <input type="submit" name="search-button" value="Search">
